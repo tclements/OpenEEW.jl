@@ -9,6 +9,7 @@ AWSS3 = "1c724243-ef5b-51ab-93f4-b0a88ac62a95"
 AWSSDK = "0d499d91-6ae5-5d63-9313-12987b87d5ad"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
+Interpolations = "a98d9a8b-a2ab-59e6-89dd-64a1c18fca59"
 JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 SeisIO = "b372bb87-02dd-52bb-bcf6-c30dd83fd342"
 
