@@ -14,6 +14,7 @@ JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 SeisIO = "b372bb87-02dd-52bb-bcf6-c30dd83fd342"
 
 [compat]
+DataFrames = "0.21"
 SeisIO = "1.0"
 julia = "1"
 
