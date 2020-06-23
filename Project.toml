@@ -12,9 +12,12 @@ Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
 Interpolations = "a98d9a8b-a2ab-59e6-89dd-64a1c18fca59"
 JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 SeisIO = "b372bb87-02dd-52bb-bcf6-c30dd83fd342"
+StructArrays = "09ab397b-f2b6-538f-b94a-2f83cf4a842a"
 
 [compat]
 AWSS3 = "0.7"
+DataFrames = "0.21"
+Interpolations = "0.12"
 SeisIO = "1.0"
 julia = "1"
 
