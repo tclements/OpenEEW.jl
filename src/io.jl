@@ -94,6 +94,7 @@ function openeew2seisdata(O::Array{OpenEEWRecord})
     # due to time-delays, the last few points will be lost
     newt = resample_time(t,sr)
     bad = ceil(Int,(newt[end] - t[end]) * sr)
+    bad = bad < 0 ? 0 : bad
     itpx = interpolate((t,), x, Gridded(Linear()))
     itpy = interpolate((t,), y, Gridded(Linear()))
     itpz = interpolate((t,), z, Gridded(Linear()))
