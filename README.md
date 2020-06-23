@@ -1,14 +1,14 @@
 # OpenEEW
 
-OpenEEW.jl is a Julia package for working with the [OpenEEW AWS Public Dataset](https://registry.opendata.aws/grillo-openeew/). It provides a client to simplify downloading accelerometer data from AWS. See [here](https://github.com/grillo/openeew/tree/master/data#accessing-openeew-data-on-aws) for information about how the data are organized.
+OpenEEW.jl is a Julia package for working with the [OpenEEW AWS Public Dataset](https://registry.opendata.aws/grillo-openeew/). It provides a client to simplify downloading accelerometer data from AWS. See [here](https://github.com/openeew/openeew/tree/master/data#accessing-openeew-data-on-aws) for information about how the data are organized.
 
 For further analysis of the data, we suggest using [SeisIO](https://github.com/jpjones76/SeisIO.jl). 
 
 
 Some additional resources:
 
-- [OpenEEW GitHub repository](https://github.com/grillo/openeew)
-- [openeew-python GitHub repository](https://github.com/grillo/openeew-python)
+- [OpenEEW GitHub repository](https://github.com/openeew/openeew)
+- [openeew-python GitHub repository](https://github.com/openeew/openeew-python)
 
 Installation
 ===========
