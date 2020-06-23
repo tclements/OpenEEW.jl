@@ -15,6 +15,7 @@ SeisIO = "b372bb87-02dd-52bb-bcf6-c30dd83fd342"
 StructArrays = "09ab397b-f2b6-538f-b94a-2f83cf4a842a"
 
 [compat]
+AWSSDK = "0.5"
 AWSCore = "0.6"
 JSON = "0.21"
 AWSS3 = "0.7"
