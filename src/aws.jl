@@ -67,6 +67,9 @@ function get_records(
     startfloat = format(starttime)
     endfloat = format(endtime)
 
+    # check time bounds
+    @assert starttime < endtime
+
     # get devices
     devices = get_devices(aws,country_code)
     df = DataFrame(StructArray(devices))
@@ -258,25 +261,7 @@ function keys2download(
 )
 
     files2download = Array{String}(undef,0)
-    prefix = "records/country_code=$country_code/device_id=$device_id/"
-
-    # get best granular prefix
-    dates = date_range(starttime,endtime)
-    dateprefix = ["year","month","day","hour"]
-    datelength = [4,2,2,2]
-    for (ii,tfunc) in enumerate([year,month,day,hour])
-        periods = unique(tfunc.(dates))
-        if length(periods) == 1
-            datestr = lpad(string(periods[1]),datelength[ii],'0')
-            prefix = joinpath(prefix,"$(dateprefix[ii])=$datestr")
-        else
-            break
-        end
-    end
-
-    if prefix[end] != '/'
-        prefix *= '/'
-    end
+    prefix = get_prefix(country_code,device_id,starttime,endtime)
 
     # list all possible files
     s3req = AWSSDK.S3.list_objects_v2(
@@ -285,7 +270,6 @@ function keys2download(
         c = s3req["Contents"]
         outfiles = [string(c[ii]["Key"]) for ii = 1:length(c)]
         append!(files2download,outfiles)
-
 
         while parse(Bool,s3req["IsTruncated"])
             s3req = AWSSDK.S3.list_objects_v2(
@@ -327,4 +311,32 @@ function openeew2datetime(path::String)
     m = path[end-7:end-6]
     yy,mm,dd,hh,m = parse.(Int,[yy,mm,dd,hh,m])
     return DateTime(yy,mm,dd,hh,m)
+end
+
+function get_prefix(
+    country_code::String,
+    device_id::String,
+    starttime::DateTime,
+    endtime::DateTime
+)
+    prefix = "records/country_code=$country_code/device_id=$device_id/"
+    dates = date_range(starttime,endtime)
+    ind = findall(.!(dates .>= endtime))
+    dates = dates[ind]
+    dateprefix = ["year","month","day","hour"]
+    datelength = [4,2,2,2]
+    for (ii,tfunc) in enumerate([year,month,day,hour])
+        periods = unique(tfunc.(dates))
+        if length(periods) == 1
+            datestr = lpad(string(periods[1]),datelength[ii],'0')
+            prefix = joinpath(prefix,"$(dateprefix[ii])=$datestr")
+        else
+            break
+        end
+    end
+
+    if prefix[end] != '/'
+        prefix *= '/'
+    end
+    return prefix
 end
