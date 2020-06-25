@@ -95,17 +95,10 @@ function get_records(
         if length(files2download) == 0
             continue
         end
+
+        # add records to array
         for file in files2download
-            eewstream = s3_get(aws,"grillo-openeew",file)
-            eewstr = split(String(eewstream),"\n")
-
-            # remove last value if empty
-            if eewstr[end] == ""
-                deleteat!(eewstr,length(eewstr))
-            end
-
-            # add records to array
-            append!(eewrecords,OpenEEWRecord.(JSON.parse.(eewstr)))
+            append!(eewrecords,get_record(aws,file))
         end
 
         # check for gaps
@@ -155,13 +148,12 @@ function get_devices(aws::AWSConfig,country_code::String;
         throw(ArgumentError("Country code must be one of: 'cl', 'cr' or 'mx'."))
     end
 
-    devreq = String(
-        s3_get(
+    devreq = s3_get(
             aws,"grillo-openeew","devices/country_code=$country_code/devices.jsonl"
-        )
     )
 
-    devices = OpenEEWDevice.(JSON.parse.(split(devreq,"\n")[1:end-1]))
+
+    devices = JSON2.read.(splitjson(devreq),OpenEEWDevice)
     if current
         devices = [d for d in devices if d.is_current_row == true]
     end
@@ -339,4 +331,9 @@ function get_prefix(
         prefix *= '/'
     end
     return prefix
+end
+
+function get_record(aws::AWSConfig,key::String)
+    eewstream = s3_get(aws,"grillo-openeew",key)
+    return JSON2.read.(splitjson(eewstream),OpenEEWRecord)
 end

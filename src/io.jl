@@ -1,4 +1,4 @@
-export read_openeew, openeew2seisdata, OpenEEWRecord
+export read_openeew, openeew2seisdata, OpenEEWRecord, splitjson
 
 # structure for holding an individual OpenEEW structure
 struct OpenEEWRecord
@@ -38,12 +38,8 @@ Read OpenEEW data using SeisIO.
 """
 function read_openeew(filepath::String)
     # read JSON lines file
-    records  = split(String(read(filepath)),"\n")
+    records  = splitjson(read(filepath))
 
-    # remove empty last record
-    if records[end] == ""
-        deleteat!(records,length(records))
-    end
     # convert to Julia struct
     O = OpenEEWRecord.(JSON.parse.(records))
     return openeew2seisdata(O)
@@ -167,4 +163,15 @@ function openeew2seisdata(
     S.x[2] = y
     S.x[3] = z
     return S
+end
+
+function splitjson(A::AbstractArray)
+    splits = split(String(A),"\n")
+
+    # remove empty last record
+    if splits[end] == ""
+        deleteat!(splits,length(splits))
+    end
+
+    return splits
 end
