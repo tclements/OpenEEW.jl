@@ -89,7 +89,7 @@ function get_records(
 
     # download
     Sout = Array{SeisData}(undef,0)
-    for device_id in device_ids
+    for (ii,device_id) in enumerate(device_ids)
         eewrecords = Array{OpenEEWRecord}(undef,0)
         files2download = keys2download(aws,country_code,device_id,startdate,enddate)
         if length(files2download) == 0
@@ -102,7 +102,7 @@ function get_records(
         end
 
         # check for gaps
-        S = openeew2seisdata(eewrecords)
+        S = openeew2seisdata(eewrecords,vertical_axis=df[ii,:vertical_axis])
         sync!(S,s=startdate,t=enddate)
         push!(Sout,S)
     end

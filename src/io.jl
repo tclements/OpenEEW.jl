@@ -50,13 +50,21 @@ end
 
 Convert `Array` `O` of `OpenEEWRecords` to SeisData structure.
 """
-function openeew2seisdata(O::Array{OpenEEWRecord})
+function openeew2seisdata(O::Array{OpenEEWRecord};
+    vertical_axis::Union{String,Char}="x",
+)
     N = length(O)
+    T = eltype(vertical_axis)
+    ax = T == Char ? first.(["x","y","z"]) : ["x","y","z"]
+    horizontal_axes = setdiff(ax,[vertical_axis])
+    vert = Symbol(vertical_axis)
+    horiz1 = Symbol(horizontal_axes[1])
+    horiz2 = Symbol(horizontal_axes[2])
 
     # allocate arrays
-    x = vcat([O[ii].x for ii = 1:N]...)
-    y = vcat([O[ii].y for ii = 1:N]...)
-    z = vcat([O[ii].z for ii = 1:N]...)
+    x = vcat([getproperty(O[ii],horiz1) for ii = 1:N]...)
+    y = vcat([getproperty(O[ii],horiz2) for ii = 1:N]...)
+    z = vcat([getproperty(O[ii],vert) for ii = 1:N]...)
 
     # enforce constraint that channels must be same length
     Nx = length(x)
@@ -142,12 +150,12 @@ function openeew2seisdata(
     S = SeisData(3)
 
     # use SEED naming convetion
-    S.id[1] = "$country_code.$device_id..x"
-    S.id[2] = "$country_code.$device_id..y"
-    S.id[3] = "$country_code.$device_id..z"
-    S.name[1] = "$country_code.$device_id..x"
-    S.name[2] = "$country_code.$device_id..y"
-    S.name[3] = "$country_code.$device_id..z"
+    S.id[1] = "$country_code.$device_id..ENX"
+    S.id[2] = "$country_code.$device_id..ENY"
+    S.id[3] = "$country_code.$device_id..ENZ"
+    S.name[1] = "$country_code.$device_id..ENX"
+    S.name[2] = "$country_code.$device_id..ENY"
+    S.name[3] = "$country_code.$device_id..ENZ"
 
     # add sampling rate
     S.fs[1] = sr
